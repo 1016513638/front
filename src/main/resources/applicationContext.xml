@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+    <import resource="spring-service.xml"></import>
+    <import resource="spring-mvc.xml"></import>
+    <import resource="spring-dao.xml"></import>
+
+    <bean id="ActionLoggerUtil" class="com.jammer.www.interceptor.ActionLogger"></bean>
+
+    <aop:config>
+        <aop:aspect ref="ActionLoggerUtil">
+            <aop:pointcut id="adminSelectLogger01" expression="execution(* com.jammer.www.service.impl.FormServiceImpl.adminSelectOneForm(..))"/>
+            <aop:after method="adminSelectFormLogger" pointcut-ref="adminSelectLogger01"></aop:after>
+        </aop:aspect>
+        <aop:aspect ref="ActionLoggerUtil">
+            <aop:pointcut id="adminSelectLogger02" expression="execution(* com.jammer.www.service.impl.FormServiceImpl.selectAllForm())"/>
+            <aop:after method="adminSelectFormLogger" pointcut-ref="adminSelectLogger02"></aop:after>
+        </aop:aspect>
+        <aop:aspect ref="ActionLoggerUtil">
+            <aop:pointcut id="adminUpdateLogger01" expression="execution(* com.jammer.www.service.impl.FormServiceImpl.updateFormStatus(..))"/>
+            <aop:after method="adminUpdateFormLogger" pointcut-ref="adminUpdateLogger01"></aop:after>
+        </aop:aspect>
+        <aop:aspect ref="ActionLoggerUtil">
+            <aop:pointcut id="adminUpdateLogger02" expression="execution(* com.jammer.www.service.impl.AdminServiceImpl.upAdmin(..))"/>
+            <aop:after method="adminUpdateAdminLogger" pointcut-ref="adminUpdateLogger02"></aop:after>
+        </aop:aspect>
+        <aop:aspect ref="ActionLoggerUtil">
+            <aop:pointcut id="adminUpdateLogger03" expression="execution(* com.jammer.www.service.impl.AdminServiceImpl.downAdmin(..))"/>
+            <aop:after method="adminUpdateAdminLogger" pointcut-ref="adminUpdateLogger03"></aop:after>
+        </aop:aspect>
+    </aop:config>
+
+</beans>

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>管理员界面</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Bootstrap 101 Template</title>
+			
+		<!-- Bootstrap -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+		<style>
+			body,html{
+				width: 100%;
+				height: 100%;
+			}
+			
+			.body1{
+				background-image: linear-gradient(to right , #7A88FF, #7AFFAF);
+			}
+
+			.navColor{
+				background: #535353;
+			}
+
+			.div1{
+				width: 800px;
+				height: 60%;
+				background-color: aliceblue;
+				margin: auto;
+				border-radius: 20px;
+			}
+			
+			.div2{
+				width: 50%;
+				text-align: center;
+				margin: auto;
+			}
+			
+			.p1{
+				height: 20px;
+			}
+			
+			.tableCenter{
+				text-align: center;
+				margin: auto;
+			}
+
+			.tableFont{
+				font-size: 18px;
+				font-style: initial;
+				font-weight: bold;
+			}
+			
+			
+		</style>
+	</head>
+	<body class="body1" onload="init()">
+		
+		<script src="../resources/jquery-3.6.0.js"></script>
+		
+		<script>
+			
+			//初始化函数
+			function init(){
+				$.get("/resume2/acer/getPersonalInfo.do",function(data){
+					var json=JSON.parse(data);
+					if(json.msg=="no"){
+						$(location).attr('href','loginView.html');
+					}else if(json.msg=="false"){
+						alert("服务器繁忙");
+					}else{
+						document.getElementById("username").innerHTML=json.data.name;
+					}
+				});
+				
+				$.get("/resume2/fcer/admin/selectAllFormCount.do",function(data){
+					var json=JSON.parse(data);
+					var count=json.data.maxPageCount;
+					document.getElementById("peopleNum").innerHTML="当前简历的数量为："+count;
+				});
+			}
+			
+			//显示简历信息
+			function showInfo(jsonArr,byWhat){
+				var show=document.getElementById("show");
+				var newTable=document.createElement("table");
+				newTable.setAttribute("class","table table-hover tableCenter tableFont");
+				newTable.setAttribute("style","width: 50%;border: 5px solid whitesmoke;");
+				for(var i=0;i<jsonArr.length;i++){
+					var trNode = newTable.insertRow();
+					var tdNode = trNode.insertCell();
+					tdNode.innerHTML="简历编号";
+					var tdNode = trNode.insertCell();
+					tdNode.innerHTML=jsonArr[i].formId;
+					
+					var trNode = newTable.insertRow();
+					var tdNode = trNode.insertCell();
+					tdNode.innerHTML="姓名";
+					var tdNode = trNode.insertCell();
+					tdNode.innerHTML=jsonArr[i].name;
+					
+					var trNode = newTable.insertRow();
+					var tdNode = trNode.insertCell();
+					tdNode.innerHTML="专业";
+					var tdNode = trNode.insertCell();
+					tdNode.innerHTML=jsonArr[i].subject;
+					
+					var trNode = newTable.insertRow();
+					var tdNode = trNode.insertCell();
+					tdNode.innerHTML="班级";
+					var tdNode = trNode.insertCell();
+					tdNode.innerHTML=jsonArr[i].clazz;
+					
+					var trNode = newTable.insertRow();
+					var tdNode = trNode.insertCell();
+					tdNode.innerHTML="学号";
+					var tdNode = trNode.insertCell();
+					tdNode.innerHTML=jsonArr[i].stuId;
+					
+					var trNode = newTable.insertRow();
+					var tdNode = trNode.insertCell();
+					tdNode.innerHTML="兴趣";
+					var tdNode = trNode.insertCell();
+					tdNode.innerHTML=jsonArr[i].hobby;
+					
+					var trNode = newTable.insertRow();
+					var tdNode = trNode.insertCell();
+					tdNode.innerHTML="学习方向";
+					var tdNode = trNode.insertCell();
+					tdNode.innerHTML=jsonArr[i].direction;
+					
+					var trNode = newTable.insertRow();
+					var tdNode = trNode.insertCell();
+					tdNode.innerHTML="个人介绍";
+					var tdNode = trNode.insertCell();
+					tdNode.innerHTML=jsonArr[i].info;
+					
+					var trNode = newTable.insertRow();
+					var tdNode = trNode.insertCell();
+					tdNode.innerHTML="审核状态";
+					var tdNode = trNode.insertCell();
+					if(jsonArr[i].status=="0"){
+						tdNode.innerHTML="待审核";
+					}else if(jsonArr[i].status=="1"){
+						tdNode.innerHTML="已通过";
+					}else if(jsonArr[i].status=="-1"){
+						tdNode.innerHTML="未通过";
+					}
+					
+					
+					var trNode = newTable.insertRow();
+					var tdNode = trNode.insertCell();
+					tdNode.innerHTML="投递时间";
+					var tdNode = trNode.insertCell();
+					tdNode.innerHTML=jsonArr[i].sendTime;
+
+					var trNode = newTable.insertRow();
+					var tdNode = trNode.insertCell();
+					var a = document.createElement("button");
+					a.id=jsonArr[i].formId;
+					a.value=byWhat;
+					a.innerHTML="通过";
+					a.setAttribute("onclick","ok(this)");
+					tdNode.appendChild(a);
+					
+					var tdNode = trNode.insertCell();
+					var b = document.createElement("button");
+					b.id=jsonArr[i].formId;
+					b.innerHTML="驳回";
+					b.value=byWhat;
+					b.setAttribute("onclick","lose(this)");
+					tdNode.appendChild(b);
+					
+					var trNode = newTable.insertRow();
+					var tdNode = trNode.insertCell();
+					var trNode = newTable.insertRow();
+					var tdNode = trNode.insertCell();
+					var trNode = newTable.insertRow();
+					var tdNode = trNode.insertCell();
+					show.appendChild(newTable);			
+				}
+			}
+
+			
+			function showAdmin(jsonArr){
+				var thName = new Array("名称", "手机号码", "管理等级");
+				var newTable = document.createElement("table");
+				newTable.setAttribute("class", "table table-hover tableCenter tableFont");
+				var trNode = newTable.insertRow();
+				for (var p = 0; p < thName.length; p++) {
+					var th = document.createElement("th");
+					th.setAttribute("class","tableCenter");
+					th.innerHTML = thName[p];
+					trNode.appendChild(th);
+				}
+				var show=document.getElementById("show");
+				for(var i=0;i < jsonArr.length; i++){
+					var trNode = newTable.insertRow();
+					var tdNode = trNode.insertCell();
+					tdNode.innerHTML = jsonArr[i].name;
+					var tdNode = trNode.insertCell();
+					tdNode.innerHTML = jsonArr[i].phoneNum;
+					var tdNode = trNode.insertCell();
+					if(jsonArr[i].level=="1"){
+						tdNode.innerHTML = "高级管理员";
+						var tdNode = trNode.insertCell();
+						var a = document.createElement("button");
+						a.id=jsonArr[i].adminId;
+						a.innerHTML="降级";
+						a.setAttribute("onclick","down(this)");
+						tdNode.appendChild(a);
+					}else if(jsonArr[i].level=="2") {
+						tdNode.innerHTML = "普通管理员";
+						var tdNode = trNode.insertCell();
+						var b = document.createElement("button");
+						b.id=jsonArr[i].adminId;
+						b.innerHTML="提权";
+						b.setAttribute("onclick","up(this)");
+						tdNode.appendChild(b);
+					}
+					show.appendChild(newTable);
+				}
+			}
+			
+			$(document).ready(function() {
+				$("#exitMe").click(function () {
+					$.get("/resume2/acer/exitMe.do", function (data) {
+						if (data == "true") {
+							$(location).attr('href', 'loginView.html');
+						}
+					});
+				});
+
+				$("#getPersonalInfo").click(function () {
+					$.get("/resume2/acer/getPersonalInfo.do", function (data) {
+						$("#show").empty();
+						var json = JSON.parse(data);
+						var show = document.getElementById("show");
+						var newTable = document.createElement("table");
+						newTable.setAttribute("class", "table table-striped");
+						newTable.setAttribute("border", "2px");
+						var thName = new Array("名称", "手机号码", "管理等级");
+						var trNode = newTable.insertRow();
+						for (var i = 0; i < thName.length; i++) {
+							var th = document.createElement("th");
+							th.innerHTML = thName[i];
+							trNode.appendChild(th);
+						}
+
+						var trNode = newTable.insertRow();
+						var tdNode = trNode.insertCell();
+						tdNode.innerHTML = json.data.name;
+						var tdNode = trNode.insertCell();
+						tdNode.innerHTML = json.data.phoneNum;
+						var tdNode = trNode.insertCell();
+						tdNode.innerHTML = json.data.level;
+						show.appendChild(newTable);
+					});
+				});
+
+				$("#select").click(function () {
+					$("#show").empty();
+					if (document.getElementById("selectInput").getAttribute("style") == "display: block;") {
+						document.getElementById("selectInput").setAttribute("style", "display: none;");
+					} else {
+						document.getElementById("selectInput").setAttribute("style", "display: block;");
+					}
+				});
+			});
+
+
+			function up(up){
+				var userAdminId=up.id;
+				$.post("/resume2/acer/admin/upAdmin.do",{
+					adminId:userAdminId
+				},function (data){
+					if(data=="true"){
+						alert("修改成功！");
+						selectAllAdmin();
+					}else if (data=="false"){
+						alert("修改失败！");
+					}else if(data=="no"){
+						alert("您无权限操作！");
+					}
+				});
+			}
+
+			function down(down){
+				var  userAdminId=down.id;
+				$.post("/resume2/acer/admin/downAdmin.do",{
+					adminId:userAdminId
+				},function (data){
+					if(data=="true"){
+						alert("修改成功！");
+						selectAllAdmin();
+					}else if (data=="false"){
+						alert("修改失败！");
+					}else if(data=="no"){
+						alert("您无权限操作！");
+					}
+				});
+			}
+
+
+			function ok(ok){
+				var userFormId=ok.id;
+				$.post("/resume2/fcer/admin/updateFormStatus.do",{
+					formId:userFormId,
+					status:"1"
+				},function(data){
+					if(data=="true"){
+						alert("修改成功！");
+						if(ok.value=="byId"){
+							adminSelectOneFormById();
+						}else if(ok.value=="byName"){
+							adminSelectOneFormByName();
+						}else if(ok.value=="all"){
+							selectAllForm();
+						}
+					}else{
+						alert("修改失败！");
+					}
+				});
+			}
+
+			function lose(lose){
+				var userFormId=lose.id;
+				$.post("/resume2/fcer/admin/updateFormStatus.do",{
+					formId:userFormId,
+					status:"-1"
+				},function(data){
+					if(data=="true"){
+						alert("修改成功！");
+						if(lose.value=="byId"){
+							adminSelectOneFormById();
+						}else if(lose.value=="byName"){
+							adminSelectOneFormByName();
+						}else if(lose.value=="all"){
+							selectAllForm();
+						}
+					}else{
+						alert("修改失败！");
+					}
+				});
+			}
+
+			
+			function adminSelectOneFormById(){
+				var stuId=document.getElementById("context").value;
+				if(stuId==""){
+					alert("请输入内容！");
+					return;
+				}
+				$.get("/resume2/fcer/admin/adminSelectOneForm.do?stuId="+stuId,function(data){
+				  var json=JSON.parse(data);
+				  if(json.msg=="false"){
+					  alert("查询无结果！");
+					  $("#show").empty();
+					  return ;
+				  }else{
+					  $("#show").empty();
+					  var jsonArr=json.data;
+					  showInfo(jsonArr,"byId");
+				  }
+				});
+			}
+			
+			function adminSelectOneFormByName(){
+				var name=document.getElementById("context").value;
+				if(name==""){
+					alert("请输入内容！");
+					return;
+				}
+				$.get("/resume2/fcer/admin/adminSelectOneForm.do?name="+name,function(data){
+				  var json = JSON.parse(data);
+				  if(json.msg=="false"){
+					  alert("查询无结果！");
+					  $("#show").empty();
+					  return ;
+				  }else {
+					  $("#show").empty();
+					  var jsonArr=json.data;
+					  showInfo(jsonArr, "byName");
+				  }
+				});
+			}
+			
+			function adminSelectOneFormByIdOnly(){
+				var stuId=document.getElementById("context").value;
+				if(stuId==""){
+					alert("请输入内容！");
+					return;
+				}
+				$.get("/resume2/fcer/admin/adminSelectOneFormOnly.do?stuId="+stuId,function(data){
+				  var json=JSON.parse(data);
+				  if(json.msg=="false"){
+					  alert("查询无结果！");
+					  $("#show").empty();
+					  return ;
+				  }else{
+					  $("#show").empty();
+					  var jsonArr=json.data;
+					  showInfo(jsonArr,"byId");
+				  }
+				});
+			}
+			
+			function adminSelectOneFormByNameOnly(){
+				var name=document.getElementById("context").value;
+				if(name==""){
+					alert("请输入内容！");
+					return;
+				}
+				$.get("/resume2/fcer/admin/adminSelectOneFormOnly.do?stuId="+stuId,function(data){
+				  var json=JSON.parse(data);
+				  if(json.msg=="false"){
+					  alert("查询无结果！");
+					  $("#show").empty();
+					  return ;
+				  }else{
+					  $("#show").empty();
+					  var jsonArr=json.data;
+					  showInfo(jsonArr,"byId");
+				  }
+				});
+			}
+			
+			//查看所有简历
+			function selectAllForm(){
+				$.get("/resume2/fcer/admin/selectAllForm.do",function(data){
+					var json=JSON.parse(data);
+					if(data=="false"){
+						alert("查询无结果！");
+						$("#show").empty();
+						return ;
+					}else {
+						$("#show").empty();
+						var jsonArr = json.data;
+						showInfo(jsonArr, "all");
+					}
+				});
+			}
+			
+			//查看所有管理员
+			function selectAllAdmin(){
+				$.get("/resume2/acer/admin/selectAllAdmin.do",function (data){
+					var json=JSON.parse(data);
+					if(json.msg=="no"){
+						alert("您没有权限查看！");
+					}else{
+						$("#show").empty();
+						var jsonArr=json.data;
+						showAdmin(jsonArr);
+					}
+				});
+
+			}
+				
+			
+			
+		
+		</script>
+		
+		
+		<nav class="navbar navbar-default navbar-static-top navColor">
+		  <div class="container">
+			  <button id="getPersonalInfo" type="button" class="btn btn-default" style="width: 100px; height: 50px;"><font id="username" size="3" color="cornflowerblue"></font></button>
+			  <button id="select" type="button" class="btn btn-default" style="width: 100px; height: 50px;">查看简历</button>
+			  <button id="exitMe" type="button" class="btn btn-default" style="width: 100px; height: 50px;">注销</button>
+			  <button id="selectAdmin" onclick="selectAllAdmin()" type="button" class="btn btn-default" style="width: 100px; height: 50px;">查看管理员</button>
+			  <div style="float: right;"><font size="5" id="peopleNum"></font></div>
+		  </div>
+		</nav>
+		
+		<div id="selectInput" class="input-group" style="display: none;">
+		      <input id="context" type="text" class="form-control" placeholder="Search for..." style="width: 60%;float: left;">
+		      <span class="input-group-btn">
+		        <button id="adminSelectOneFormById" onclick="adminSelectOneFormById()" class="btn btn-default" type="button">按学号查找</button>
+				<button id="adminSelectOneFormByName" onclick="adminSelectOneFormByName()" class="btn btn-default" type="button">按姓名查找</button>
+		      	<button id="adminSelectOneFormByIdOnly" onclick="adminSelectOneFormByIdOnly()" class="btn btn-default" type="button">按学号精确查找</button>
+		      	<button id="adminSelectOneFormByNameOnly" onclick="adminSelectOneFormByNameOnly()" class="btn btn-default" type="button">按姓名精确查找</button>
+				<button id="selectAllForm" onclick="selectAllForm()" class="btn btn-default" type="button">查询所有</button>
+			  </span>
+		    </div>
+		</div>
+		
+		<p class="p1"></p>
+		<div id="show"></div>
+	</body>
+</html>

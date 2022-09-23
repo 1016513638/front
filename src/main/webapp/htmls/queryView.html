@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta charset="utf-8">
+		<title>查询简历</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>Bootstrap 101 Template</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+		
+		<style>
+			.body1{
+				background-image: linear-gradient(to right , #7A88FF, #7AFFAF);
+			}
+			
+			.p1{
+				height: 20px;
+			}
+			
+			.a1{
+				width: 50%;
+				text-align: center;
+				margin: auto;
+			}
+			
+			.div1{
+				text-align: center;
+				margin: auto;
+			}
+			
+			.div2{
+				width: 50%;
+				text-align: center;
+				margin: auto;
+			}
+			.div4{
+				margin: auto;
+				text-align: center;
+			}
+			
+		</style>
+		
+		
+	</head>
+	<body class="body1">
+		<script src="../resources/jquery-3.6.0.js"></script>
+		
+		<script>
+			$(document).ready(function(){
+			  $("#userSelectOneForm").click(function(){
+				  var context=document.getElementById("context").value;
+				  $.get("/resume2/fcer/userSelectOneForm.do?stuId="+context,function(data){
+					  var json=JSON.parse(data);
+					  if(json.msg=="false"){
+						  alert("查询无结果！");
+						  document.getElementById("formId").innerHTML="...";
+						  document.getElementById("name").innerHTML="...";
+						  document.getElementById("subject").innerHTML="...";
+						  document.getElementById("clazz").innerHTML="...";
+						  document.getElementById("stuId").innerHTML="...";
+						  document.getElementById("hobby").innerHTML="...";
+						  document.getElementById("direction").innerHTML="...";
+						  document.getElementById("info").innerHTML="...";
+						  document.getElementById("status").innerHTML="...";
+						  return;
+					  }else{
+						  document.getElementById("formId").innerHTML=json.data.formId;
+						  document.getElementById("name").innerHTML=json.data.name;
+						  document.getElementById("subject").innerHTML=json.data.subject;
+						  document.getElementById("clazz").innerHTML=json.data.clazz;
+						  document.getElementById("stuId").innerHTML=json.data.stuId;
+						  document.getElementById("hobby").innerHTML=json.data.hobby;
+						  document.getElementById("direction").innerHTML=json.data.direction;
+						  document.getElementById("info").innerHTML=json.data.info;
+						  if(json.data.status=="0"){
+							  document.getElementById("status").innerHTML="待审核";
+						  }else if(json.data.status=="1"){
+							  document.getElementById("status").innerHTML="已通过";
+						  }else if(json.data.status=="-1"){
+							  document.getElementById("status").innerHTML="未通过";
+						  }
+					  }
+				  });
+			  });
+			});
+			
+		</script>
+		
+		
+		<p class="p1"></p>
+		<div class="div1">
+		<div class="input-group">
+		      <input id="context" type="text" class="form-control" placeholder="Search for..." style="width: 60%;float: right;">
+		      <span class="input-group-btn">
+		        <button id="userSelectOneForm" class="btn btn-default" type="button">按学号查找</button>
+		      </span>
+		    </div>
+		</div>
+		<p class="p1"></p>
+		
+		<div class="panel panel-default div2">
+		  <div class="panel-heading">简历编号</div>
+		  <div class="panel-body">
+		    <p id="formId">...</p>
+		  </div>
+		</div>
+		<div class="panel panel-default div2">
+			<div class="panel-heading">姓名</div>
+			<div class="panel-body">
+				<p id="name">...</p>
+			</div>
+		</div>
+		<div class="panel panel-default div2">
+			<div class="panel-heading">专业</div>
+			<div class="panel-body">
+				<p id="subject">...</p>
+			</div>
+		</div>
+		<div class="panel panel-default div2">
+			<div class="panel-heading">班级</div>
+			<div class="panel-body">
+				<p id="clazz">...</p>
+			</div>
+		</div>
+		<div class="panel panel-default div2">
+			<div class="panel-heading">学号</div>
+			<div class="panel-body">
+				<p id="stuId">...</p>
+			</div>
+		</div>
+		<div class="panel panel-default div2">
+			<div class="panel-heading">兴趣</div>
+			<div class="panel-body">
+				<p id="hobby">...</p>
+			</div>
+		</div>
+		<div class="panel panel-default div2">
+			<div class="panel-heading">学习方向</div>
+			<div class="panel-body">
+				<p id="direction">...</p>
+			</div>
+		</div>
+		<div class="panel panel-default div2">
+			<div class="panel-heading">个人介绍</div>
+			<div class="panel-body">
+				<p id="info">...</p>
+			</div>
+		</div>
+		<div class="panel panel-default div2">
+			<div class="panel-heading">审核状态</div>
+			<div class="panel-body">
+				<p id="status">...</p>
+			</div>
+		</div>
+		<p class="p1"></p>
+		<div class="div4"><a href="userChoose.html">返回选择</a></div>
+	</body>
+</html>

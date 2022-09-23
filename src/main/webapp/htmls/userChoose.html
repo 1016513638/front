@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>报名者选择</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>Bootstrap 101 Template</title>
+			
+		<!-- Bootstrap -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+		<style>
+			.body1{
+				background-image: linear-gradient(to right , #7A88FF, #7AFFAF);
+			}
+
+			.div1{
+				width: 450px;
+				height: 500px;
+				background-color: whitesmoke;
+				border: 2px solid aliceblue;
+				border-radius: 20px;
+				margin: auto;
+				margin-top: 10%;
+			}
+			
+			.div2{
+				text-align: center;
+				margin-top: 50px;
+			}
+			
+			.div3{
+				width: 100%;
+				text-align: center;
+				margin-left: 18%;
+			}
+			
+			.div4{
+				margin: auto;
+				text-align: center;
+			}
+			
+			
+			.p1{
+				height: 40px;
+			}
+			
+			.p2{
+				height: 15px;
+			}
+			
+			
+			
+			.font1{
+				font-weight: 700;
+			}
+			
+		</style>
+		
+	</head>
+	<body class="body1">
+		
+		<script src="../resources/jquery-3.6.0.js"></script>
+		
+		<script>
+			$(document).ready(function(){
+			  $("#login").click(function(){
+				  var username=document.getElementById("name").value;
+				  var password=document.getElementById("pass").value;
+
+				  $.post("/resume/acer/login",{
+						name:username,
+						url:password
+					},
+					function(data,status){
+						alert("数据: \n" + data + "\n状态: " + status);
+					});
+			  });
+			});
+			
+			
+			$(document).ready(function(){
+				$("#send").click(function(){
+					$(location).attr('href', 'userView.html');
+				});
+				$("#query").click(function(){
+					$(location).attr('href', 'queryView.html');
+				});
+			});
+			
+			
+		</script>
+		
+		<div class="div1">
+			
+			<div class="div2"><font size="7" color="royalblue" class="font1">请选择</font></div>
+			
+			<p class="p1"></p>
+			
+			
+			<div class="div4"><font  size="5" color="royalblue">查询简历</font></div>
+			
+			<div class="div4"><button id="query" type="button" class="btn btn-primary" style="width: 250px;height: 40px;border-radius: 20px;"><font size="4" class="font1">进入查询</font></button></div>
+			
+			<p class="p2"></p>
+
+			<br />
+			<p class="p2"></p>
+			<div class="div4"><font  size="5" color="royalblue">投递简历</font></div>
+			<div class="div4"><button id="send" type="button" class="btn btn-primary" style="width: 250px;height: 40px;border-radius: 20px;"><font size="4" class="font1">现在投递</font></button></div>
+			<p class="p2"></p>
+			<div class="div4"><a href="startView.html">返回身份选择</a></div>
+		</div>
+		
+		
+		
+	</body>
+</html>

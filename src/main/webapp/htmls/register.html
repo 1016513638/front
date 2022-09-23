@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>管理员注册</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+		<title>Bootstrap 101 Template</title>
+			
+		<!-- Bootstrap -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+		<style>
+			.body1{
+				background-image: linear-gradient(to right , #7A88FF, #7AFFAF);
+			}
+
+			.div1{
+				width: 600px;
+				height: 700px;
+				background-color: whitesmoke;
+				border: 2px solid aliceblue;
+				border-radius: 20px;
+				margin: auto;
+				margin-top: 10%;
+			}
+			
+			.div2{
+				text-align: center;
+				margin-top: 50px;
+			}
+			
+			.div3{
+				width: 100%;
+				text-align: center;
+				margin-left: 18%;
+			}
+			
+			.div4{
+				margin: auto;
+				text-align: center;
+			}
+			
+			.select1{
+				width: 370px;
+				height: 40px;
+			}
+			
+			.p1{
+				height: 40px;
+			}
+			
+			.p2{
+				height: 15px;
+			}
+			
+			
+			
+			.font1{
+				font-weight: 700;
+			}
+			
+		</style>
+		
+	</head>
+	<body class="body1">
+		
+		<script src="../resources/jquery-3.6.0.js"></script>
+		
+		<script>
+			$(document).ready(function(){
+			  $("#register").click(function(){
+				  var username=document.getElementById("name").value;
+				  var password=document.getElementById("pass").value;
+				  var passx=document.getElementById("passx").value;
+				  var userphoneNum=document.getElementById("phoneNum").value;
+				  var userlevel=document.getElementById("level").value;
+				  var userRegisterPassword=document.getElementById("registerPassword").value;
+				  
+				  if(username==""||password==""||userphoneNum===""||userlevel==""||userRegisterPassword==""){
+					  alert("内容不能空！");
+					  return;
+				  }
+				  if(password!=passx){
+					  alert("两次输入的密码不一致！");
+					  return;
+				  }
+				  $.post("/resume2/acer/register.re",{
+					  name:username,
+					  pass:password,
+					  phoneNum:userphoneNum,
+					  level:userlevel,
+					  registerPassword:userRegisterPassword
+				  },function(data){
+					  var json=JSON.parse(data);
+					  if(json.msg=="true"){
+						  alert("恭喜你，注册成功！");
+						  $(location).attr('href','loginView.html');
+					  }else{
+						  if(json.msg=="reCodeError"){
+							  alert("注册密令错误");
+						  }else if(json.msg=="nameError"){
+							  alert("用户名已存在");
+						  }
+					  }
+				  })
+			  });
+			});
+			
+			
+		</script>
+		
+		<div class="div1">
+			
+			<div class="div2"><font size="7" color="royalblue" class="font1">管理员注册</font></div>
+			
+			<p class="p1"></p>
+			
+			<div class="div3 input-group">
+				<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+			    <input type="text" class="form-control" style="width: 60%;height: 40px;" id="name" placeholder="名称">
+			</div>
+			
+			<p class="p2"></p>
+			
+			<div class="div3 input-group">
+				<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+			    <input type="text" class="form-control" style="width: 60%;height: 40px;" id="pass" placeholder="密码">
+			</div>
+		
+			<p class="p2"></p>
+			
+			<div class="div3 input-group">
+				<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+			    <input type="text" class="form-control" style="width: 60%;height: 40px;" id="passx" placeholder="再次输入密码">
+			</div>
+
+			<p class="p2"></p>
+			
+			<div class="div3 input-group">
+				<span class="input-group-addon"><span class="glyphicon glyphicon-earphone"></span></span>
+			    <input type="text" class="form-control" style="width: 60%;height: 40px;" id="phoneNum" placeholder="手机号码">
+			</div>
+			
+			<p class="p2"></p>
+
+			<div class="div3 input-group">
+				<span class="input-group-addon"><span class="glyphicon glyphicon-check"></span></span>
+			    <input type="text" class="form-control" style="width: 60%;height: 40px;" id="registerPassword" placeholder="注册密令">
+			</div>
+			
+			<p class="p2"></p>
+			
+			<div class="div4">
+				<select id="level" class="select1">
+					<option value="2">普通管理员</option>
+					<option value="1">高级管理员</option>
+				</select>
+			</div>
+
+			
+			<p class="p2">
+				
+			<div class="div4"><button id="register" type="button" class="btn btn-primary" style="width: 250px;height: 40px;border-radius: 20px;"><font size="4" class="font1">注册</font></button></div>
+			
+			<p class="p2"></p>
+			
+			<div class="div4"><a href="loginView.html">返回登录</a></div>
+		
+		
+		</div>
+		
+		
+		
+	</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>报名</title>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Bootstrap 101 Template</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+		
+		<style>
+			body,html{
+				width: 100%;
+				height: 100%;
+			}
+			
+			.body1{
+				background-image: linear-gradient(to right, #7A88FF, #7AFFAF);
+			}
+			
+			.divA{
+				width: 80%;
+				height: 90%;
+				border: 2px solid whitesmoke;
+				margin: auto;
+				margin-top: 1%;
+				background-color: aliceblue;
+			}
+			
+			.div4{
+				margin: auto;
+				text-align: center;
+			}
+			
+			.p1{
+				height: 20px;
+			}
+			
+			
+			
+		</style>
+		
+	</head>
+	<body class="body1">
+		<script src="../resources/jquery-3.6.0.js"></script>
+		
+		<script>
+			$(document).ready(function (){
+				$("#sendForm").click(function (){
+					var userCode=prompt("请输入验证码：");
+					var username = document.getElementById("name").value;
+					var userSubject = document.getElementById("subject").value;
+					var userClazz = document.getElementById("clazz").value;
+					var userStuId = document.getElementById("stuId").value;
+					var userHobby = document.getElementById("hobby").value;
+					var userDirection = document.getElementById("direction").value;
+					var userInfo = document.getElementById("info").value;
+
+					if (username == "" || userSubject == "" || userClazz == "" || userStuId == "" || userInfo == "") {
+						alert("输入内容不能为空！");
+						return;
+					}
+
+					$.post("/resume2/fcer/sendForm.do", {
+							name: username,
+							subject: userSubject,
+							clazz: userClazz,
+							stuId: userStuId,
+							hobby: userHobby,
+							direction: userDirection,
+							info: userInfo,
+							code:userCode
+						},function (data) {
+							if(data=="false"){
+								alert("投递失败！");
+							}else if(data=="true"){
+								alert("投递成功！");
+								$(location).attr('href','userChoose.html');
+							}else if(data=="codeErr"){
+								alert("验证码错误！");
+								$("#codePic").click(function(){
+								  $.get("/resume2/fcer/getCode.do",function(){
+									  document.getElementById("codePic").setAttribute("src","/resume2/fcer/getCode.do");
+								  });
+								})
+							}
+						});
+				});
+				
+				$(document).ready(function(){
+				  $("#codePic").click(function(){
+					  $.get("/resume2/fcer/getCode.do",function(){
+						  document.getElementById("codePic").setAttribute("src","/resume2/fcer/getCode.do");
+					  });
+				  })
+				});
+			})
+		</script>
+		
+		
+		<div class="page-header">
+		  <h1>填写简历<small>输入个人信息</small></h1>
+		</div>
+		<div class="divA">
+			<div class="input-group">
+			  <span class="input-group-addon"><span class="glyphicon glyphicon-user">姓名</span></span>
+			  <input id="name" type="text" class="form-control" placeholder="姓名" aria-describedby="basic-addon1">
+			</div>
+			
+			<p class="p1"></p>
+			
+			<div class="input-group">
+			  <span class="input-group-addon"><span class="glyphicon glyphicon-user">专业</span></span>
+			  <input id="subject" type="text" class="form-control" placeholder="专业" aria-describedby="basic-addon1">
+			</div>
+			
+			<p class="p1"></p>
+			
+			<div class="input-group">
+			  <span class="input-group-addon"><span class="glyphicon glyphicon-user">班级</span></span>
+			  <input id="clazz" type="text" class="form-control" placeholder="班级" aria-describedby="basic-addon1">
+			</div>
+			
+			<p class="p1"></p>
+			
+			<div class="input-group">
+			  <span class="input-group-addon"><span class="glyphicon glyphicon-user">学号</span></span>
+			  <input id="stuId" type="text" class="form-control" placeholder="学号" aria-describedby="basic-addon1">
+			</div>
+			
+			<p class="p1"></p>
+			
+			<div class="input-group">
+			  <span class="input-group-addon"><span class="glyphicon glyphicon-user">兴趣</span></span>
+			  <input id="hobby" type="text" class="form-control" placeholder="兴趣" aria-describedby="basic-addon1">
+			</div>
+			
+			<p class="p1"></p>
+			
+			<div class="input-group">
+			  <span class="input-group-addon"><span class="glyphicon glyphicon-user">学习方向</span></span>
+			  <input id="direction" type="text" class="form-control" placeholder="学习方向" aria-describedby="basic-addon1">
+			</div>
+			
+			<p class="p1"></p>
+			
+			<div class="input-group">
+			  <span class="input-group-addon"><span class="glyphicon glyphicon-user">个人介绍</span></span>
+			  <textarea id="info" class="form-control" rows="8" style="resize: none;"></textarea>
+			</div>
+			
+			<p class="p1"></p>
+			
+			验证码:<img id="codePic" src="/resume2/fcer/getCode.do"/>
+			
+			<p class="p1"></p>
+			
+			<div class="div4"><button  id="sendForm" type="button" class="btn btn-primary" style="width: 250px;height: 40px;border-radius: 20px;"><font size="4" class="font1">点击投递</font></button></div>
+			
+			
+			
+		</div>
+		
+	</body>
+</html>

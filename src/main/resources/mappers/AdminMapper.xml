@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jammer.www.dao.AdminDao">
+    <!-- 判断是否可以登录 -->
+    <select id="judgeLogin" resultType="Admin">
+        select name,pass from admin where name=#{name} and pass=#{pass}
+  </select>
+
+    <!-- 判断此管理员是否可以注册 -->
+    <select id="judgeRegister" resultType="string">
+        select registerPassword from registerpassword where id=1
+    </select>
+
+    <!-- 查询一个管理员 -->
+    <select id="selectOneAdmin" resultType="Admin">
+        select adminId,name,phoneNum,level from admin
+        <where>
+            <choose>
+                <when test="name!=null">
+                    and name=#{name}
+                </when>
+                <when test="id!=null">
+                    and id=#{id}
+                </when>
+            </choose>
+        </where>
+    </select>
+
+    <!-- 注册一个管理员 -->
+    <insert id="registerAdmin" parameterType="Admin">
+        insert into admin(name,pass,phoneNum,level) values(#{name},#{pass},#{phoneNum},#{level})
+    </insert>
+
+    <select id="selectAllAdmin" parameterType="int" resultType="Admin">
+        select adminId,name,phoneNum,level from admin where adminId!=#{adminId}
+    </select>
+
+
+    <update id="upAdmin" parameterType="int">
+        update admin set level='1' where adminId=#{adminId}
+    </update>
+
+    <update id="downAdmin" parameterType="int">
+        update admin set level ='2'  where adminId=#{adminId};
+    </update>
+</mapper>

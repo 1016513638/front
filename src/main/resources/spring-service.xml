@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <import resource="spring-dao.xml"></import>
+
+    <!-- 扫描service包 -->
+    <context:component-scan base-package="com.jammer.www.service"></context:component-scan>
+
+
+    <!-- 将业务类配置为spring管理 -->
+    <bean id="AdminServiceImpl" class="com.jammer.www.service.impl.AdminServiceImpl">
+        <property name="adminDao" ref="adminDao"></property>
+    </bean>
+
+    <bean id="FormServiceImpl" class="com.jammer.www.service.impl.FormServiceImpl">
+        <property name="formDao" ref="formDao"></property>
+    </bean>
+
+    <!-- 配置事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"></tx:annotation-driven>
+
+</beans>

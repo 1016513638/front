@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jammer.www.dao.FormDao">
+   
+   <select id="selectRepeatedForm" parameterType="string" resultType="Form">
+      select stuId from form where stuId=#{stuId} and (status=0 or status=1);
+   </select>
+   
+   <insert id="insertForm" parameterType="Form">
+      insert into form(formId,name,subject,clazz,stuId,hobby,direction,info,status,sendTime) values(#{formId},#{name},#{subject},#{clazz},#{stuId},#{hobby},#{direction},#{info},'0',#{sendTime})
+   </insert>
+
+   <!-- 报名者查看简历方式 -->
+   <select id="userSelectOneForm" parameterType="map" resultType="Form">
+      select formId,name,subject,clazz,stuId,hobby,direction,info,status from form
+      <where>
+         <if test="name!=null">
+            and name=#{name}
+         </if>
+         <if test="stuId!=null">
+            and stuId=#{stuId}
+         </if>
+      </where>
+   </select>
+
+   <select id="adminSelectOneForm" parameterType="map" resultType="Form">
+      select formId,name,subject,clazz,stuId,hobby,direction,info,status,sendTime from form
+      <where>
+         <if test="name!=null">
+            and name like concat('%',#{name},'%')
+         </if>
+         <if test="stuId!=null">
+            and stuId like concat('%',#{stuId},'%')
+         </if>
+      </where>
+
+   </select>
+
+   <select id="adminSelectOneFormOnly" parameterType="map" resultType="Form">
+      select formId,name,subject,clazz,stuId,hobby,direction,info,status,sendTime from form
+      <where>
+         <if test="name!=null">
+            and name=#{name}
+         </if>
+         <if test="stuId!=null">
+            and stuId=#{stuId}
+         </if>
+      </where>
+   </select>
+
+
+   <update id="updateFormStatus" parameterType="map">
+      update form set status=#{status} where formId=#{formId}
+   </update>
+
+   <select id="selectAllFormCount" resultType="int">
+      select count(stuId) from form
+   </select>
+
+
+   <select id="selectAllForm" resultType="Form">
+      select formId,name,subject,clazz,stuId,hobby,direction,info,status,sendTime from form
+   </select>
+
+
+
+</mapper>
